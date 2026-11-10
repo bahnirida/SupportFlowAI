@@ -1,0 +1,43 @@
+@baseUrl = http://127.0.0.1:8000
+
+### Check server health (200)
+GET {{baseUrl}}/health
+Accept: application/json
+
+### Create a ticket (201). Run this before fetching the ticket by ID.
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Cannot log in",
+  "description": "I receive an error when signing in to my account."
+}
+
+> {%
+    client.test("Ticket created", function () {
+        client.assert(response.status === 201, "Expected status 201");
+    });
+    client.global.set("ticket_id", response.body.id);
+%}
+
+### List all tickets (200)
+GET {{baseUrl}}/tickets
+Accept: application/json
+
+### Get the created ticket (200)
+GET {{baseUrl}}/tickets/{{ticket_id}}
+Accept: application/json
+
+### Get a missing ticket (404)
+GET {{baseUrl}}/tickets/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### Reject an invalid ticket (422)
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "",
+  "description": ""
+}
