@@ -4,6 +4,10 @@
 GET {{baseUrl}}/health
 Accept: application/json
 
+### Check PostgreSQL connection (200 when connected, 503 when unavailable)
+GET {{baseUrl}}/health/db
+Accept: application/json
+
 ### Create a ticket (201). Run this before fetching the ticket by ID.
 POST {{baseUrl}}/tickets
 Content-Type: application/json
